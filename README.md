@@ -1,35 +1,43 @@
 # DeepSeek Balance — KDE Plasma 6 Applet
 
-A KDE Plasma 6 applet that shows your DeepSeek API account balance in the panel.
+A KDE Plasma 6 applet that displays your DeepSeek API account balance in the panel.
 
 ## Features
 
-- Display DeepSeek balance on panel
-- Detailed breakdown (granted/topped-up) in popup
+- Balance summary in the panel
+- Detailed breakdown in popup (available, granted, topped-up)
+- Locale-aware currency symbols (CNY→¥, USD→$, EUR→€, JPY→¥, etc.)
+- JPY/KRW displayed without decimal places
 - Configurable refresh interval (60s–3600s)
 - API key stored securely via KDE KWallet
-- Error handling for network/auth failures
-
-## Requirements
-
-- KDE Plasma 6
-- Qt 6.5+
-- DeepSeek API key ([platform.deepseek.com](https://platform.deepseek.com))
+- Error, loading, and empty state UI coverage
+- Scrollable popup when content overflows
 
 ## Install
 
+### From source (user directory)
+
 ```bash
-# Install from source
+git clone https://github.com/unclemate/plasma_applet_token_usage.git
+cd plasma_applet_token_usage
 kpackagetool6 --install . --type Plasma/Applet
-
-# Upgrade after changes
-kpackagetool6 --upgrade . --type Plasma/Applet
-
-# Remove
-kpackagetool6 --remove org.kde.plasma.tokenusage
 ```
 
-### Build with CMake (system-wide)
+### Upgrade
+
+```bash
+cd plasma_applet_token_usage
+kpackagetool6 --upgrade . --type Plasma/Applet
+# Restart panel: killall plasmashell && sleep 0.5 && kstart plasmashell &
+```
+
+### Remove
+
+```bash
+kpackagetool6 --remove org.kde.plasma.tokenusage --type Plasma/Applet
+```
+
+### System-wide install (CMake)
 
 ```bash
 mkdir build && cd build
@@ -44,13 +52,48 @@ sudo make install
 2. Search for "DeepSeek Balance"
 3. Right-click the applet → **Configure**
 4. Enter your DeepSeek API key
-5. Adjust refresh interval if needed
+5. Adjust refresh interval if needed (default 60s)
+
+## Configuration
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| API Key | DeepSeek API key (encrypted via KWallet) | — |
+| Refresh Interval | Auto-refresh interval in seconds | 60 |
 
 ## Data Source
 
-Uses the official DeepSeek API: [`GET /user/balance`](https://api-docs.deepseek.com/api/get-user-balance)
+Official DeepSeek API: [`GET /user/balance`](https://api-docs.deepseek.com/api/get-user-balance)
 
-DeepSeek does not provide a programmatic API for historical token usage data. For detailed usage analysis, use the web dashboard at [platform.deepseek.com/usage](https://platform.deepseek.com/usage).
+## Supported Currencies
+
+USD `$`, CNY `¥`, EUR `€`, GBP `£`, JPY `¥`, KRW `₩`, INR `₹`, RUB `₽`, BRL `R$`, CAD `$`, AUD `$`, HKD `$`, SGD `$`, TWD `NT$`
+
+Unlisted currencies fall back to `XXX 25.77` format.
+
+## Tech Stack
+
+- **Language**: Pure QML / JavaScript (no C++)
+- **Framework**: KDE Plasma 6, Qt 6, Kirigami
+- **Storage**: KConfig XT (Password type → KWallet)
+- **API**: XMLHttpRequest
+
+## Project Structure
+
+```
+contents/
+├── config/
+│   ├── config.qml          # Configuration dialog entry
+│   └── main.xml            # KConfig XT schema
+└── ui/
+    ├── main.qml            # PlasmoidItem entry point
+    ├── config/
+    │   └── ConfigGeneral.qml  # API key settings page
+    └── lib/
+        ├── deepseek.js     # DeepSeek API adapter
+        ├── store.js        # State management bridge
+        └── formatters.js   # Currency formatting utilities
+```
 
 ## License
 

@@ -1,3 +1,21 @@
+# Build
 build/
+
+# Editors
 *~
+.vscode/
+.idea/
+*.user
 .kdev4/
+
+# OS
+.DS_Store
+Thumbs.db
+.directory
+
+# CMake
+CMakeUserPresets.json
+
+# Python (used by some KDE scripts)
+__pycache__/
+*.pyc
