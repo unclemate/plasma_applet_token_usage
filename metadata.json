@@ -1,0 +1,24 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "user@example.com",
+                "Name": "Developer"
+            }
+        ],
+        "Category": "System Information",
+        "Description": "Display DeepSeek API account balance",
+        "EnabledByDefault": true,
+        "FormFactors": [
+            "desktop",
+            "panel"
+        ],
+        "Icon": "deepseek",
+        "Id": "org.kde.plasma.tokenusage",
+        "License": "GPL-2.0+",
+        "Name": "DeepSeek Balance",
+        "Website": "https://github.com/user/plasma_applet_token_usage"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
